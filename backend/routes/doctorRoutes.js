@@ -14,4 +14,7 @@ router.get("/:doctorId/daily-patients", doctorController.getDailyPatients);
 // Add a patient to the daily list
 router.post("/:doctorId/add-patient/:patientId", doctorController.addPatientToDailyList);
 
+// Remove a patient from the daily list
+router.delete("/:doctorId/remove-patient/:patientId", doctorController.removePatientFromDailyList);
+
 module.exports = router;
