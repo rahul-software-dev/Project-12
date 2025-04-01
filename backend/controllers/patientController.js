@@ -37,10 +37,15 @@ exports.getPatientById = async (req, res) => {
 };
 
 // Get prescription history of a patient
-exports.getPatientPrescriptions = async (req, res) => {
+exports.getPatientPrescriptions = async (req, res) => {  // Fixed function name
     try {
-        const prescriptions = await Prescription.find({ patientId: req.params.patientId }).select("-__v");
-        if (!prescriptions.length) return res.status(404).json({ message: "No prescriptions found for this patient." });
+        const prescriptions = await Prescription.find({ patientId: req.params.patientId })
+            .select("-__v")
+            .populate("patientId", "name age gender"); // Optional: Include patient details
+
+        if (!prescriptions.length) {
+            return res.status(404).json({ message: "No prescriptions found for this patient." });
+        }
 
         res.status(200).json(prescriptions);
     } catch (error) {
