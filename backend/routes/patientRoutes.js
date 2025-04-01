@@ -9,6 +9,6 @@ router.post("/register", patientController.registerPatient);
 router.get("/:patientId", patientController.getPatientById);
 
 // Retrieve all prescriptions for a patient
-router.get("/:patientId/prescriptions", patientController.getPrescriptions);
+router.get("/:patientId/prescriptions", patientController.getPatientPrescriptions); // Fixed function name
 
 module.exports = router;
