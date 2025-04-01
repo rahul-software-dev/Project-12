@@ -14,7 +14,7 @@ exports.createPrescription = async (req, res) => {
         await newPrescription.save();
 
         // Add patient to doctor's daily list
-        await Doctor.findByIdAndUpdate(doctorId, { $addToSet: { dailyPatients: patientId } });
+        await Doctor.findOneAndUpdate({ doctorId }, { $addToSet: { dailyPatients: patientId } });
 
         res.status(201).json({ message: "Prescription created successfully", prescription: newPrescription });
     } catch (error) {
@@ -22,14 +22,30 @@ exports.createPrescription = async (req, res) => {
     }
 };
 
-// Retrieve prescription by patient ID
+// Retrieve prescriptions by patient ID
 exports.getPrescriptionByPatientId = async (req, res) => {
     try {
-        const prescription = await Prescription.findOne({ patientId: req.params.patientId }).select("-__v");
-        if (!prescription) return res.status(404).json({ message: "Prescription not found." });
+        const prescriptions = await Prescription.find({ patientId: req.params.patientId }).select("-__v");
+        if (!prescriptions.length) return res.status(404).json({ message: "No prescriptions found." });
 
-        res.status(200).json(prescription);
+        res.status(200).json(prescriptions);
     } catch (error) {
         res.status(500).json({ message: "Error fetching prescription", error: error.message });
+    }
+};
+
+// Update an existing prescription
+exports.updatePrescription = async (req, res) => {
+    try {
+        const { prescriptionId } = req.params;
+        const updateData = req.body;
+
+        const updatedPrescription = await Prescription.findByIdAndUpdate(prescriptionId, updateData, { new: true });
+
+        if (!updatedPrescription) return res.status(404).json({ message: "Prescription not found." });
+
+        res.status(200).json({ message: "Prescription updated successfully", prescription: updatedPrescription });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating prescription", error: error.message });
     }
 };
