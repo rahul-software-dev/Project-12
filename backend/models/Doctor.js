@@ -5,7 +5,7 @@ const doctorSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
     specialization: { type: String, required: true },
     contactNumber: { type: String, required: true, match: [/^\d{10}$/, "Invalid phone number"] },
-    email: { type: String, trim: true, lowercase: true, match: [/.+\@.+\..+/, "Invalid email"] },
+    email: { type: String, trim: true, lowercase: true, match: [/.+@.+\..+/, "Invalid email"] },
     dailyPatients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Patient" }],
     createdAt: { type: Date, default: Date.now }
 });
