@@ -9,6 +9,6 @@ router.post("/create", prescriptionController.createPrescription);
 router.get("/:patientId", prescriptionController.getPrescriptionByPatientId);
 
 // Update an existing prescription
-router.put("/:prescriptionId/update", prescriptionController.updatePrescription);
+router.put("/:prescriptionId", prescriptionController.updatePrescription);
 
 module.exports = router;
