@@ -1,4 +1,5 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config({ path: './backend/.env' }); // adjust if running from root
+console.log('[ENV] MONGO_URI:', process.env.MONGO_URI); // debug print
 
 const express = require('express');
 const cors = require('cors');
@@ -24,25 +25,36 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// 🌐 Security & Performance Middleware
-app.use(helmet({ 
-    contentSecurityPolicy: false // Allow API requests
-})); 
-app.use(cors({ 
-    origin: process.env.CLIENT_URL || '*', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+// Handle Fatal Errors
+process.on("uncaughtException", (err) => {
+    console.error("[FATAL ERROR] Uncaught Exception:", err);
+    process.exit(1);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+    console.error("[FATAL ERROR] Unhandled Rejection:", reason);
+    process.exit(1);
+});
+
+//  Security & Performance Middleware
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
+app.use(cors({
+    origin: process.env.CLIENT_URL || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(compression()); // Enable gzip compression for responses
-app.use(hpp()); // Prevent HTTP parameter pollution
-app.use(express.json({ limit: '10mb' })); // Parse JSON payloads
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
-app.use(morgan('combined')); // HTTP request logging
+app.use(compression());
+app.use(hpp());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('combined'));
 
-// 🚀 API Rate Limiter (Prevents Abuse)
+// 🚀 API Rate Limiter
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per window
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: 'Too many requests from this IP, please try again later.',
 });
 app.use('/api', limiter);
@@ -51,10 +63,10 @@ app.use('/api', limiter);
 (async () => {
     try {
         await connectDB();
-        logger.info('✅ Database connected successfully');
+        logger.info(' Database connected successfully');
     } catch (error) {
-        logger.error('❌ Database connection failed:', error);
-        process.exit(1); // Exit if DB connection fails
+        logger.error(' Database connection failed:', error);
+        process.exit(1);
     }
 })();
 
@@ -70,29 +82,35 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/auth', authRoutes);
 
-// 🔥 Central Error Handling
+//  Central Error Handling
 app.use(errorHandler);
 
-// 🚀 Start Express Server
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => logger.info(`🚀 Server running on port ${PORT}`));
+//  Start Server with Port Fallback Logic
+const BASE_PORT = parseInt(process.env.PORT, 10) || 5000;
 
-// 🛑 Graceful Shutdown & Cleanup
-process.on('SIGINT', async () => {
-    logger.warn('⚠️  Server is shutting down...');
-    server.close(() => {
-        logger.info('✅ Server shut down successfully.');
-        process.exit(0);
+function startServer(port) {
+    const server = app.listen(port, () => {
+        logger.info(` Server running on port ${port}`);
     });
-});
 
-// 🛑 Handle Uncaught Exceptions & Rejections
-process.on('unhandledRejection', (err) => {
-    logger.error('Unhandled Rejection:', err);
-    process.exit(1);
-});
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            logger.warn(` Port ${port} is already in use. Trying port ${port + 1}...`);
+            startServer(port + 1);
+        } else {
+            logger.error(' Server failed to start:', err);
+            process.exit(1);
+        }
+    });
 
-process.on('uncaughtException', (err) => {
-    logger.error('Uncaught Exception:', err);
-    process.exit(1);
-});
+    //  Graceful Shutdown
+    process.on('SIGINT', async () => {
+        logger.warn(' Server is shutting down...');
+        server.close(() => {
+            logger.info(' Server shut down successfully.');
+            process.exit(0);
+        });
+    });
+}
+
+startServer(BASE_PORT);

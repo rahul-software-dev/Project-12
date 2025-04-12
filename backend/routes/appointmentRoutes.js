@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const appointmentController = require("../controllers/appointmentController");
 
-// Book an appointment
+// Book appointment
 router.post("/book", appointmentController.bookAppointment);
 
 // Get all appointments for a doctor
@@ -12,6 +12,6 @@ router.get("/doctor/:doctorId", appointmentController.getAppointmentsForDoctor);
 router.get("/patient/:patientId", appointmentController.getAppointmentsForPatient);
 
 // Cancel an appointment
-router.delete("/:appointmentId/cancel", appointmentController.cancelAppointment);
+router.delete("/cancel/:appointmentId", appointmentController.cancelAppointment);
 
 module.exports = router;

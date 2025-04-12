@@ -12,37 +12,37 @@ import Notification from './components/common/Notification';
 import Loader from './components/common/Loader';
 
 // Pages
-import HomePage from './pages/common/HomePage';
-import AboutPage from './pages/common/AboutPage';
-import ContactPage from './pages/common/ContactPage';
-import NotFoundPage from './pages/common/NotFoundPage';
-import ProfilePage from './pages/common/ProfilePage';
+import HomePage from '../components/pages/common/HomePage';
+import AboutPage from '../components/pages/common/AboutPage';
+import ContactPage from '../components/pages/common/ContactPage';
+import NotFoundPage from '../components/pages/common/NotFoundPage';
+import ProfilePage from '../components/pages/common/ProfilePage';
 
 // Auth Pages
-import LoginPage from './pages/auth/LoginPage';
-import SignupPage from './pages/auth/SignupPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import LoginPage from '../components/pages/auth/LoginPage';
+import SignupPage from '../components/pages/auth/SignupPage';
+import ForgotPasswordPage from '../components/pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '../components/pages/auth/ResetPasswordPage';
 
 // Doctor Pages
-import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
-import DailyPatientsPage from './pages/doctor/DailyPatientsPage';
-import ViewPatientPage from './pages/doctor/ViewPatientPage';
-import CreatePrescriptionPage from './pages/doctor/CreatePrescriptionPage';
-import UploadDocumentsPage from './pages/doctor/UploadDocumentsPage';
+import DoctorDashboardPage from '../components/pages/doctor/DoctorDashboardPage';
+import DailyPatientsPage from '../components/pages/doctor/DailyPatientsPage';
+import ViewPatientPage from '../components/pages/doctor/ViewPatientPage';
+import CreatePrescriptionPage from '../components/pages/doctor/CreatePrescriptionPage';
+import UploadDocumentsPage from '../components/pages/doctor/UploadDocumentsPage';
 
 // Patient Pages
-import PatientDashboardPage from './pages/patient/PatientDashboardPage';
-import ViewPrescriptionPage from './pages/patient/ViewPrescriptionPage';
-import BookAppointmentPage from './pages/patient/BookAppointmentPage';
-import SearchDoctorsPage from './pages/patient/SearchDoctorsPage';
-import UploadHealthDocsPage from './pages/patient/UploadHealthDocsPage';
+import PatientDashboardPage from '../components/pages/patient/PatientDashboardPage';
+import ViewPrescriptionPage from '../components/pages/patient/ViewPrescriptionPage';
+import BookAppointmentPage from '../components/pages/patient/BookAppointmentPage';
+import SearchDoctorsPage from '../components/pages/patient/SearchDoctorsPage';
+import UploadHealthDocsPage from '../components/pages/patient/UploadHealthDocsPage';
 
 // Admin Pages
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
-import ManageDoctorsPage from './pages/admin/ManageDoctorsPage';
-import ManagePatientsPage from './pages/admin/ManagePatientsPage';
-import SystemLogsPage from './pages/admin/SystemLogsPage';
+import AdminDashboardPage from '../components/pages/admin/AdminDashboardPage';
+import ManageDoctorsPage from '../components/pages/admin/ManageDoctorsPage';
+import ManagePatientsPage from '../components/pages/admin/ManagePatientsPage';
+import SystemLogsPage from '../components/pages/admin/SystemLogsPage';
 
 // Protected Routes
 import ProtectedRoute from './components/common/ProtectedRoute';

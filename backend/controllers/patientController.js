@@ -1,21 +1,37 @@
 const Patient = require("../models/Patient");
 const Prescription = require("../models/Prescription");
+const User = require("../models/User"); // Assuming User model exists for the users table
 
 // Register a new patient
 exports.registerPatient = async (req, res) => {
     try {
-        const { patientId, name, age, gender } = req.body;
+        const { name, age, gender, blood_group, contactNumber, userId } = req.body;
 
-        if (!patientId || !name || !age || !gender) {
+        if (!name || !age || !gender || !blood_group || !contactNumber || !userId) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
-        const existingPatient = await Patient.findOne({ patientId });
-        if (existingPatient) {
-            return res.status(400).json({ message: "Patient ID already exists." });
+        // Check if the user already exists in the users table
+        const existingUser = await User.findById(userId);
+        if (!existingUser) {
+            return res.status(400).json({ message: "User not found." });
         }
 
-        const newPatient = new Patient({ patientId, name, age, gender });
+        // Check if a patient is already registered for the user
+        const existingPatient = await Patient.findOne({ user_id: userId });
+        if (existingPatient) {
+            return res.status(400).json({ message: "Patient already exists for this user." });
+        }
+
+        // Create a new patient
+        const newPatient = new Patient({
+            user_id: userId,
+            age,
+            gender,
+            blood_group,
+            contact_number: contactNumber, // Ensure the contact number is handled correctly
+        });
+
         await newPatient.save();
 
         res.status(201).json({ message: "Patient registered successfully", patient: newPatient });
@@ -27,7 +43,7 @@ exports.registerPatient = async (req, res) => {
 // Get patient details by ID
 exports.getPatientById = async (req, res) => {
     try {
-        const patient = await Patient.findOne({ patientId: req.params.patientId }).select("-__v");
+        const patient = await Patient.findOne({ user_id: req.params.patientId }).select("-__v");
         if (!patient) return res.status(404).json({ message: "Patient not found" });
 
         res.status(200).json(patient);
@@ -37,11 +53,12 @@ exports.getPatientById = async (req, res) => {
 };
 
 // Get prescription history of a patient
-exports.getPatientPrescriptions = async (req, res) => {  // Fixed function name
+exports.getPatientPrescriptions = async (req, res) => {
     try {
-        const prescriptions = await Prescription.find({ patientId: req.params.patientId })
+        const prescriptions = await Prescription.find({ patient_id: req.params.patientId })
             .select("-__v")
-            .populate("patientId", "name age gender"); // Optional: Include patient details
+            .populate("doctor_id", "name specialization") // Optional: Include doctor details
+            .populate("patient_id", "name age gender blood_group"); // Optional: Include patient details
 
         if (!prescriptions.length) {
             return res.status(404).json({ message: "No prescriptions found for this patient." });

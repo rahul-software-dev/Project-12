@@ -1,14 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const authController = require("../controllers/authController");
+const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// User login
-router.post("/login", authController.login);
+// Register, login, logout routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 
-// User logout
-router.post("/logout", authController.logout);
-
-// Verify authentication (protected route)
-router.get("/verify", authController.verifyAuth);
+// 🔥 Here's the line the error is pointing to
+router.get('/profile', authMiddleware(), authController.getProfile); // This is the /api/profile route
 
 module.exports = router;

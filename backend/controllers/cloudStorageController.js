@@ -14,3 +14,35 @@ exports.uploadPrescription = async (req, res) => {
         res.status(500).json({ message: "Error uploading file", error: error.message });
     }
 };
+
+// Retrieve prescription from cloud
+exports.retrievePrescription = async (req, res) => {
+    try {
+        const { prescriptionId } = req.params;
+
+        const fileData = await cloudStorageService.getFile(prescriptionId);
+        if (!fileData) {
+            return res.status(404).json({ message: "Prescription not found." });
+        }
+
+        res.status(200).json({ message: "Prescription retrieved successfully", fileData });
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving file", error: error.message });
+    }
+};
+
+// Delete prescription from cloud
+exports.deletePrescription = async (req, res) => {
+    try {
+        const { prescriptionId } = req.params;
+
+        const result = await cloudStorageService.deleteFile(prescriptionId);
+        if (!result) {
+            return res.status(404).json({ message: "Prescription not found." });
+        }
+
+        res.status(200).json({ message: "Prescription deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting file", error: error.message });
+    }
+};

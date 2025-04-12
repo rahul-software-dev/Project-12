@@ -1,11 +1,36 @@
-const Prescription = require("../models/Prescription");
+// backend/controllers/analyticsController.js
 
-// Get total prescriptions count
-exports.getTotalPrescriptions = async (req, res) => {
-    try {
-        const count = await Prescription.countDocuments();
-        res.status(200).json({ totalPrescriptions: count });
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching total prescriptions", error: error.message });
-    }
-};
+exports.getSystemAnalytics = (req, res) => {
+    // Example response
+    res.json({
+      totalUsers: 150,
+      totalDoctors: 40,
+      totalPatients: 110,
+      appointmentsToday: 12
+    });
+  };
+  
+  exports.getDoctorAnalytics = (req, res) => {
+    const { doctorId } = req.params;
+    res.json({
+      doctorId,
+      patientsSeen: 35,
+      prescriptionsGiven: 20
+    });
+  };
+  
+  exports.getPatientAnalytics = (req, res) => {
+    const { patientId } = req.params;
+    res.json({
+      patientId,
+      totalVisits: 8,
+      lastVisit: "2025-03-20"
+    });
+  };
+  
+  exports.getPrescriptionTrends = (req, res) => {
+    res.json({
+      topMedications: ["Paracetamol", "Amoxicillin"],
+      weeklyTrends: [5, 10, 7, 12, 9, 11, 6]
+    });
+  };
