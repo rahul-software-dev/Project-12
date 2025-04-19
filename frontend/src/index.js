@@ -1,14 +1,17 @@
-import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/common/HomePage';
-// ...other imports
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './App';
+import './App.css';
+import GlobalStateProvider from './context/GlobalStateProvider';
 
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      {/* Add other routes */}
-    </Routes>
-  );
-}
-
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Router>
+      <GlobalStateProvider>
+        <App />
+      </GlobalStateProvider>
+    </Router>
+  </React.StrictMode>
+);
