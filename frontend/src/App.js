@@ -1,8 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-// Context Providers
-import GlobalStateProvider from './context/GlobalStateProvider';
+import { Routes, Route } from 'react-router-dom';
+console.log("App.js loaded");
 
 // Common Layout Components
 import Navbar from './components/common/Navbar';
@@ -12,51 +10,49 @@ import Notification from './components/common/Notification';
 import Loader from './components/common/Loader';
 
 // Pages
-import HomePage from '../pages/common/HomePage';
-import AboutPage from '../pages/common/AboutPage';
-import ContactPage from '../pages/common/ContactPage';
-import NotFoundPage from '../pages/common/NotFoundPage';
-import ProfilePage from '../pages/common/ProfilePage';
+import HomePage from './pages/common/HomePage';
+import AboutPage from './pages/common/AboutPage';
+import ContactPage from './pages/common/ContactPage';
+import NotFoundPage from './pages/common/NotFoundPage';
+import ProfilePage from './pages/common/ProfilePage';
 
 // Auth Pages
-import LoginPage from '../pages/auth/LoginPage';
-import SignupPage from '../pages/auth/SignupPage';
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 
 // Doctor Pages
-import DoctorDashboardPage from '../pages/doctor/DoctorDashboardPage';
-import DailyPatientsPage from '../pages/doctor/DailyPatientsPage';
-import ViewPatientPage from '../pages/doctor/ViewPatientPage';
-import CreatePrescriptionPage from '../pages/doctor/CreatePrescriptionPage';
-import UploadDocumentsPage from '../pages/doctor/UploadDocumentsPage';
+import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
+import DailyPatientsPage from './pages/doctor/DailyPatientsPage';
+import ViewPatientPage from './pages/doctor/ViewPatientPage';
+import CreatePrescriptionPage from './pages/doctor/CreatePrescriptionPage';
+import UploadDocumentsPage from './pages/doctor/UploadDocumentsPage';
 
 // Patient Pages
-import PatientDashboardPage from '../pages/patient/PatientDashboardPage';
-import ViewPrescriptionPage from '../pages/patient/ViewPrescriptionPage';
-import BookAppointmentPage from '../pages/patient/BookAppointmentPage';
-import SearchDoctorsPage from '../pages/patient/SearchDoctorsPage';
-import UploadHealthDocsPage from '../pages/patient/UploadHealthDocsPage';
+import PatientDashboardPage from './pages/patient/PatientDashboardPage';
+import ViewPrescriptionPage from './pages/patient/ViewPrescriptionPage';
+import BookAppointmentPage from './pages/patient/BookAppointmentPage';
+import SearchDoctorsPage from './pages/patient/SearchDoctorsPage';
+import UploadHealthDocsPage from './pages/patient/UploadHealthDocsPage';
 
 // Admin Pages
-import AdminDashboardPage from '../pages/admin/AdminDashboardPage';
-import ManageDoctorsPage from '../pages/admin/ManageDoctorsPage';
-import ManagePatientsPage from '../pages/admin/ManagePatientsPage';
-import SystemLogsPage from '../pages/admin/SystemLogsPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import ManageDoctorsPage from './pages/admin/ManageDoctorsPage';
+import ManagePatientsPage from './pages/admin/ManagePatientsPage';
+import SystemLogsPage from './pages/admin/SystemLogsPage';
 
 // Protected Routes
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 const App = () => {
   return (
-    <GlobalStateProvider>
-      <Router>
-        <Navbar />
+    <div className="app-container">
+      <Navbar />
+      <div className="content-wrapper">
         <Sidebar />
-
         <main className="main-content">
           <Routes>
-
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -200,12 +196,11 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
-
-        <Footer />
-        <Notification />
-        <Loader />
-      </Router>
-    </GlobalStateProvider>
+      </div>
+      <Footer />
+      <Notification />
+      <Loader />
+    </div>
   );
 };
 
